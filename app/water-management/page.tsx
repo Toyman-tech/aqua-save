@@ -14,14 +14,14 @@ export default function WaterManagement() {
 
       {/* Desktop Header */}
       <header className="hidden md:block p-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Water Management</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Monitor and control water quality</p>
+        <h1 className="text-3xl font-bold text-white">Water Management</h1>
+        <p className="text-gray-200 dark:text-gray-400 mt-1">Monitor and control water quality</p>
       </header>
 
       {/* Main Content */}
       <main className="flex-1 px-4 pb-20 md:pb-6 space-y-6 md:px-6 md:max-w-none md:mx-auto">
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 md:w-[400px]">
+          <TabsList className="grid w-full grid-cols-3 md:w-3xl">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>

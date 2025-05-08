@@ -14,12 +14,12 @@ export default function Monitoring() {
       {/* Desktop Header */}
       {/* Header */}
       <header className="p-6 pt-12 hidden md:block">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Monitoring</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Monitor fish behavior and health</p>
+        <h1 className="text-3xl font-bold text-white">Monitoring</h1>
+        <p className="text-gray-200 dark:text-gray-400 mt-1">Monitor fish behavior and health</p>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-3xl md:mx-auto md:pb-6 md:px-6">
+      <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-7xl md:mx-auto md:pb-6 md:px-6">
         <Tabs defaultValue="live" className="w-full">
           <TabsList className="grid w-full grid-cols-3 md:w-[400px]">
             <TabsTrigger value="live">Live Feed</TabsTrigger>
@@ -36,7 +36,7 @@ export default function Monitoring() {
               <CardContent>
                 <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
                   <Image
-                    src="/placeholder.svg?height=400&width=600"
+                    src="/pond.png"
                     alt="Pond monitoring camera feed"
                     fill
                     className="object-cover"

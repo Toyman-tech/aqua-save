@@ -12,7 +12,7 @@ export default function Feeding() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-3xl md:mx-auto">
+      <main className="flex-1 px-4 pb-20 space-y-4 md:w-3xl md:mx-auto">
         <Card className="bg-white border-0 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center justify-between py-3 border-b border-gray-100">

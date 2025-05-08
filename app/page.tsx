@@ -3,16 +3,16 @@ import { Card, CardContent } from "@/components/ui/card"
 
 export default function Dashboard() {
   return (
-    <div className="flex flex-col gap-2 min-h-screen">
+    <div className="flex flex-col gap-2 min-h-screen w-full">
       {/* Header */}
       <header className="p-6 pt-12">
         <h1 className="text-4xl text-center font-bold text-white">Aqua-Save</h1>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-3xl md:mx-auto">
-        <Card className="bg-white border-0 shadow-lg">
-          <CardContent className="p-4">
+      <main className="flex-1 px-4 pb-20 space-y-4  md:mx-auto">
+        <Card className="flex bg-white border-0 shadow-lg w-full md:w-3xl">
+          <CardContent className="p-4 w-full ">
             <h2 className="text-xl font-bold text-teal-900 mb-4">Dashboard</h2>
 
             <div className="space-y-4">
