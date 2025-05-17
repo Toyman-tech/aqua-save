@@ -9,7 +9,7 @@ import { Sidebar } from "@/components/sidebar"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Aqua-save",
+  title: "Pond-IQ",
   description: "Cat Fish Management Application"
 }
 
