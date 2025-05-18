@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { doc, onSnapshot } from "firebase/firestore"
+// import { doc, onSnapshot } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { onValue, ref } from "firebase/database"
 // import { db } from "@/lib/firebase" // customize to your setup

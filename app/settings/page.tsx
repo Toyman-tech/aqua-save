@@ -1,7 +1,10 @@
+"use client"
 import { ChevronRight } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import { useRouter } from "next/navigation"
 
 export default function Settings() {
+  const router = useRouter()
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -31,6 +34,13 @@ export default function Settings() {
 
               <button className="flex items-center justify-between w-full p-4 text-left">
                 <span className="text-teal-900 font-medium">Privacy & Security</span>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </button>
+              <button
+                className="flex items-center justify-between w-full p-4 text-left"
+                onClick={() => router.push("/report")}
+              >
+                <span className="text-teal-900 font-medium">Log Report</span>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </button>
             </div>
