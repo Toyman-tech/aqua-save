@@ -23,7 +23,8 @@ export default function LogReportPage() {
     //   console.error("Error saving report:", err)
     //   alert("Failed to save report.")
     // }
-    toast.success("🚰 Report logged successfully!")
+      reset()
+    toast.success("✅ Report logged successfully!")
 
     reset()
     setLoading(false)
@@ -57,7 +58,7 @@ export default function LogReportPage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+          className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700 justify-center flex w-full"
         >
           {loading ? "Submitting..." : "Submit Report"}
         </button>

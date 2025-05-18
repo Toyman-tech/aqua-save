@@ -32,8 +32,8 @@ export function Sidebar({ className }: SidebarProps) {
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Catfish Pond Management</p>
       </div>
 
-      <nav className="mt-6">
-        <ul className="space-y-2 px-4">
+      <nav className="mt-6 mb-2">
+        <ul className="space-y-2 ">
           {navItems.map((item) => {
             const isActive = pathname === item.href
             return (
@@ -41,14 +41,16 @@ export function Sidebar({ className }: SidebarProps) {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center px-4 py-3 rounded-lg transition-colors",
+                    "flex items-center  py-3 rounded-lg transition-colors",
                     isActive
-                      ? "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400"
+                      ? "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400 rounded-none flex w-full"
                       : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50",
                   )}
                 >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  <span>{item.label}</span>
+                  <div className="px-4 flex flex-row">
+                    <item.icon className="w-5 h-5 mr-3" />
+                    <span>{item.label}</span>
+                  </div>
                 </Link>
               </li>
             )
@@ -61,7 +63,7 @@ export function Sidebar({ className }: SidebarProps) {
           <div className="flex items-center">
             <User className="w-8 h-8 text-teal-700 dark:text-teal-500 bg-white dark:bg-gray-800 p-1.5 rounded-full" />
             <div className="ml-3">
-              <p className="text-sm font-medium text-teal-800 dark:text-teal-400">Fish Farmer</p>
+              <p className="text-sm font-medium text-teal-800 dark:text-teal-400">PondIQ User</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">Online</p>
             </div>
           </div>

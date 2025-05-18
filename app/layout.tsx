@@ -25,7 +25,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light">
         <Toaster position="top-right" />
           <div className="flex min-h-screen bg-gradient-to-b from-teal-900 via-teal-600 to-sky-500">
-            <div className="hidden md:block">
+            <div className="hidden md:block ">
               <Sidebar />
             </div>
             <div className="flex-1">{children}</div>

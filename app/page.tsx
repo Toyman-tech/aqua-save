@@ -115,7 +115,7 @@ export default function Dashboard() {
               disabled={isChanging}
               className={`w-full py-3 rounded-md font-medium text-white ${isChanging ? "bg-gray-500 cursor-not-allowed" : "bg-teal-800 hover:bg-teal-700"
                 }`}
-            >
+            > 
               {isChanging ? "Changing..." : "Start Water Change"}
             </button>
           </CardContent>

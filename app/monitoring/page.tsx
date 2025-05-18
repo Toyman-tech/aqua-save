@@ -75,9 +75,9 @@ export default function Monitoring() {
         <p className="text-gray-200 dark:text-gray-400 mt-1">Monitor fish behavior, water conditions, and health</p>
       </header>
 
-      <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-7xl md:mx-auto md:pb-6 md:px-6">
+      <main className="flex-1 max-w-2xl px-4 pb-20 space-y-4 md:mx-auto md:pb-6 md:px-6 w-full">
         <Tabs defaultValue="live" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 md:w-[400px]">
+          <TabsList className="grid w-full grid-cols-3 ">
             <TabsTrigger value="live">Live Feed</TabsTrigger>
             <TabsTrigger value="analysis">AI Analysis</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>

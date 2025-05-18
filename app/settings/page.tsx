@@ -13,7 +13,7 @@ export default function Settings() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-3xl md:mx-auto">
+      <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-3xl md:mx-auto w-full">
         <Card className="bg-white border-0 shadow-lg">
           <CardContent className="p-0">
             <div className="divide-y divide-gray-100">
