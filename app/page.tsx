@@ -1,12 +1,15 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ref, onValue } from "firebase/database"
+import { ref, onValue, set } from "firebase/database"
 import { db } from "@/lib/firebase"
 import { Thermometer, Droplet, Fan, Waves } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
+import toast from "react-hot-toast"
+import WaterChangeStatus from "@/components/WaterChangeStatus"
 
 export default function Dashboard() {
+  const [isChanging, setIsChanging] = useState(false)
   const [data, setData] = useState({
     temperature: 0,
     atm_temperature: 0,
@@ -49,10 +52,34 @@ export default function Dashboard() {
     return "Poor"
   }
   const formattedWaterLevel = data.waterLevel ? data.waterLevel.toFixed(1) : '';
+  const handleWaterChange = async () => {
+    const changeWaterRef = ref(db, "/change_water")
+
+    try {
+      setIsChanging(true)
+
+      // 1. Trigger water change
+      await set(changeWaterRef, true)
+      toast.success("🚰 Water change initiated")
+
+      // 2. Listen for completion
+      const unsubscribe = onValue(changeWaterRef, (snapshot) => {
+        const status = snapshot.val()
+        if (status === false) {
+          toast.success("✅ Water change completed")
+          setIsChanging(false)
+          unsubscribe()
+        }
+      })
+    } catch (err) {
+      toast.error("⚠️ Failed to start water change")
+      setIsChanging(false)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-2 min-h-screen w-full">
-      <header className="p-6 pt-12">
+      <header className="p-6 pt-6">
         <h1 className="text-4xl text-center font-bold text-white">PondIQ</h1>
       </header>
 
@@ -83,10 +110,16 @@ export default function Dashboard() {
               <span className="text-teal-900 font-bold">{formattedWaterLevel}%</span>
             </div>
 
-            <button className="w-full py-3 bg-teal-800 hover:bg-teal-700 text-white rounded-md font-medium">
-              Start Water Change
+            <button
+              onClick={handleWaterChange}
+              disabled={isChanging}
+              className={`w-full py-3 rounded-md font-medium text-white ${isChanging ? "bg-gray-500 cursor-not-allowed" : "bg-teal-800 hover:bg-teal-700"
+                }`}
+            >
+              {isChanging ? "Changing..." : "Start Water Change"}
             </button>
           </CardContent>
+          <WaterChangeStatus />
         </Card>
       </main>
     </div>
@@ -115,116 +148,3 @@ function SensorRow({
     </div>
   )
 }
-
-// "use client"
-
-// import { useEffect, useState } from "react"
-// import { ref, onValue } from "firebase/database"
-// import { db } from "@/lib/firebase"
-// import { Thermometer, Droplet, Fan } from "lucide-react"
-// import { Card, CardContent } from "@/components/ui/card"
-
-// export default function Dashboard() {
-//   const [data, setData] = useState({
-//     temperature: 0,
-//     turbidity: 0,
-//     airQuality: "Normal",
-//     pH: 0,
-//     waterLevel: 0,
-//   })
-// console.log(data)
-
-//   // useEffect(() => {
-//   //   const dataRef = ref(db, "aqua-data") // adjust this path to your ESP32 push location
-//   //   console.log('data', dataRef)
-//   //   const unsubscribe = onValue(dataRef, (snapshot) => {
-//   //     if (snapshot.exists()) {
-//   //       setData(snapshot.val())
-//   //     }
-//   //   })
-
-//   //   return () => unsubscribe()
-//   // }, [])
-
-//   useEffect(() => {
-//     fetch("https://aqua-save-fe911-default-rtdb.firebaseio.com/pondData.json")
-//       .then((res) => res.json())
-//       .then((data) => setData(data));
-//   }, [data]);
-  
-
-//   return (
-//     <div className="flex flex-col gap-2 min-h-screen w-full">
-//       <header className="p-6 pt-12">
-//         <h1 className="text-4xl text-center font-bold text-white">Aqua-Save</h1>
-//       </header>
-
-//       <main className="flex-1 px-4 pb-20 space-y-4  md:mx-auto">
-//         <Card className="flex bg-white border-0 shadow-lg w-full md:w-3xl">
-//           <CardContent className="p-4 w-full ">
-//             <h2 className="text-xl font-bold text-teal-900 mb-4">Dashboard</h2>
-
-//             <div className="space-y-4">
-//               <div className="flex items-center justify-between py-3 border-b border-gray-100">
-//                 <div className="flex items-center">
-//                   <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center mr-3">
-//                     <Thermometer className="w-5 h-5 text-teal-800" />
-//                   </div>
-//                   <span className="text-teal-900 font-medium">Temperature</span>
-//                 </div>
-//                 <span className="text-teal-900 font-bold">{data.temperature}°C</span>
-//               </div>
-
-//               <div className="flex items-center justify-between py-3 border-b border-gray-100">
-//                 <div className="flex items-center">
-//                   <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center mr-3">
-//                     <Droplet className="w-5 h-5 text-teal-800" />
-//                   </div>
-//                   <span className="text-teal-900 font-medium">Turbidity</span>
-//                 </div>
-//                 <span className="text-teal-900 font-bold">{data.turbidity} NTU</span>
-//               </div>
-
-//               <div className="flex items-center justify-between py-3 border-b border-gray-100">
-//                 <div className="flex items-center">
-//                   <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center mr-3">
-//                     <Fan className="w-5 h-5 text-teal-800" />
-//                   </div>
-//                   <span className="text-teal-900 font-medium">Air Quality</span>
-//                 </div>
-//                 <span className="text-teal-900 font-bold">{data.airQuality}</span>
-//               </div>
-
-//               <div className="flex items-center justify-between py-3 border-b border-gray-100">
-//                 <div className="flex items-center">
-//                   <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center mr-3">
-//                     <Droplet className="w-5 h-5 text-teal-800" />
-//                   </div>
-//                   <span className="text-teal-900 font-medium">pH</span>
-//                 </div>
-//                 <span className="text-teal-900 font-bold">{data.pH}</span>
-//               </div>
-//             </div>
-//           </CardContent>
-//         </Card>
-
-//         <Card className="bg-white border-0 shadow-lg">
-//           <CardContent className="p-4">
-//             <div className="flex align-middle items-center mb-4 gap-3">
-//               <Droplet className="w-7 h-7 text-teal-800" />
-//               <h2 className="text-2xl font-bold text-teal-900 ">Water Management</h2>
-//             </div>
-//             <div className="flex items-center justify-between py-3 mb-4">
-//               <span className="text-teal-900 font-medium">Water Level</span>
-//               <span className="text-teal-900 font-bold">{data.waterLevel}%</span>
-//             </div>
-
-//             <button className="w-full py-3 bg-teal-800 hover:bg-teal-700 text-white rounded-md font-medium">
-//               Start Water Change
-//             </button>
-//           </CardContent>
-//         </Card>
-//       </main>
-//     </div>
-//   )
-// }
