@@ -32,7 +32,7 @@ export default function Feeding() {
 
   const updateSchedule = async (times: string[]) => {
     try {
-      await set(ref(db, "pondData/feeding_schedule"), times)
+      await set(ref(db, "pondData/feedingSchedule"), times)
       console.log("✅ Schedule updated:", times)
       toast.success(`✅ Schedule updated: ${times}`)
     } catch (error) {
