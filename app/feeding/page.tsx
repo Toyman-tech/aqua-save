@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { db } from "@/lib/firebase"
 import { ref, onValue, set } from "firebase/database"
+import toast from "react-hot-toast"
 
 export default function Feeding() {
   const [feedingTimes, setFeedingTimes] = useState<string[]>([])
@@ -30,7 +31,14 @@ export default function Feeding() {
   }, [])
 
   const updateSchedule = async (times: string[]) => {
-    await set(ref(db, "pondData/feedingSchedule"), times)
+    try {
+      await set(ref(db, "pondData/feedingSchedule"), times)
+      console.log("✅ Schedule updated:", times)
+      toast.success(`✅ Schedule updated: ${times}`)
+    } catch (error) {
+      console.error("❌ Failed to update schedule", error)
+      toast.error("⚠️ Failed to update schedule")
+    }
   }
 
   const updateMode = async (val: boolean) => {
