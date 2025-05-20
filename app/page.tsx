@@ -44,7 +44,7 @@ export default function Dashboard() {
 
     return () => unsubscribe()
   }, [])
-
+ console.log(data)
   const getAirQualityStatus = (value: number) => {
     if (value < 1000) return "Excellent"
     if (value < 2000) return "Good"
