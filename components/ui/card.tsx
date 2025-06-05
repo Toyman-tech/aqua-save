@@ -1,13 +1,22 @@
 import * as React from "react"
-
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 }
+}
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={cardVariants}
+      transition={{ duration: 0.3 }}
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
+        "bg-card text-card-foreground backdrop-blur-sm bg-white/90 flex flex-col gap-6 rounded-xl border py-6 shadow-lg hover:shadow-xl transition-shadow",
         className
       )}
       {...props}
@@ -30,7 +39,10 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3, delay: 0.1 }}
       data-slot="card-title"
       className={cn("leading-none font-semibold", className)}
       {...props}
@@ -40,7 +52,10 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
       data-slot="card-description"
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
@@ -63,7 +78,10 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, delay: 0.3 }}
       data-slot="card-content"
       className={cn("px-6", className)}
       {...props}
