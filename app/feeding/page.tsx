@@ -146,11 +146,11 @@ export default function Feeding() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="p-6 pt-12">
+      <header className="p-6 pt-12 md:pt-3">
         <h1 className="text-3xl font-bold text-white">Feeding</h1>
       </header>
 
-      <main className="flex-1 px-4 pb-20 space-y-4 md:w-3xl md:mx-auto">
+      <main className="flex-1 px-4 pb-20 space-y-4 md:space-y-1.5 md:w-3xl md:mx-auto">
         {/* Feeding Mode */}
         <Card className="bg-white border-0 shadow-lg">
           <CardContent className="p-4">
