@@ -1,150 +1,214 @@
-"use client"
+import { Thermometer, Droplet, Fan, Plus, AlertTriangle } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
-import { useEffect, useState } from "react"
-import { ref, onValue, set } from "firebase/database"
-import { db } from "@/lib/firebase"
-import { Thermometer, Droplet, Fan, Waves } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import toast from "react-hot-toast"
-import WaterChangeStatus from "@/components/WaterChangeStatus"
+// This would normally come from your API
+const mockPonds = [
+  {
+    id: "pond-a",
+    name: "Pond A",
+    status: "active" as const,
+    data: {
+      temperature: 26.5,
+      ph: 7.4,
+      airQuality: "Normal",
+      waterLevel: 80,
+      fishCount: 150,
+      lastFed: "2 hours ago",
+      alerts: 0,
+    },
+  },
+  {
+    id: "pond-b",
+    name: "Pond B",
+    status: "active" as const,
+    data: {
+      temperature: 25.8,
+      ph: 7.2,
+      airQuality: "Good",
+      waterLevel: 75,
+      fishCount: 120,
+      lastFed: "1 hour ago",
+      alerts: 0,
+    },
+  },
+  {
+    id: "pond-c",
+    name: "Pond C",
+    status: "maintenance" as const,
+    data: {
+      temperature: 24.2,
+      ph: 6.8,
+      airQuality: "Normal",
+      waterLevel: 60,
+      fishCount: 80,
+      lastFed: "4 hours ago",
+      alerts: 1,
+    },
+  },
+]
 
 export default function Dashboard() {
-  const [isChanging, setIsChanging] = useState(false)
-  const [data, setData] = useState({
-    temperature: 0,
-    atm_temperature: 0,
-    humidity: 0,
-    waterLevel: 0,
-    water_presence: 0,
-    turbidity_raw: 0,
-    turbidity_percent: 0,
-    air_quality_raw: 0,
-    pH: 7, // placeholder value
-  })
-
-  useEffect(() => {
-    const dataRef = ref(db, "pondData") // match your ESP32's upload path
-    const unsubscribe = onValue(dataRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const firebaseData = snapshot.val()
-
-        setData({
-          temperature: firebaseData.temperature || 0,
-          atm_temperature: firebaseData.atm_temperature || 0,
-          humidity: firebaseData.humidity || 0,
-          waterLevel: firebaseData.water_level || 0,
-          water_presence: firebaseData.water_presence || 0,
-          turbidity_raw: firebaseData.turbidity_raw || 0,
-          turbidity_percent: firebaseData.turbidity_percent || 0,
-          air_quality_raw: firebaseData.air_quality_raw || 0,
-          pH: firebaseData.pH || 7, // use if available, else placeholder
-        })
-      }
-    })
-
-    return () => unsubscribe()
-  }, [])
- console.log(data)
-  const getAirQualityStatus = (value: number) => {
-    if (value < 1000) return "Excellent"
-    if (value < 2000) return "Good"
-    if (value < 3000) return "Moderate"
-    return "Poor"
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-500"
+      case "maintenance":
+        return "bg-yellow-500"
+      case "inactive":
+        return "bg-red-500"
+      default:
+        return "bg-gray-500"
+    }
   }
-  const formattedWaterLevel = data.waterLevel ? data.waterLevel.toFixed(1) : '';
-  const handleWaterChange = async () => {
-    const changeWaterRef = ref(db, "/change_water")
 
-    try {
-      setIsChanging(true)
-
-      // 1. Trigger water change
-      await set(changeWaterRef, true)
-      toast.success("🚰 Water change initiated")
-
-      // 2. Listen for completion
-      const unsubscribe = onValue(changeWaterRef, (snapshot) => {
-        const status = snapshot.val()
-        if (status === false) {
-          toast.success("✅ Water change completed")
-          setIsChanging(false)
-          unsubscribe()
-        }
-      })
-    } catch (err) {
-      toast.error("⚠️ Failed to start water change")
-      setIsChanging(false)
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "active":
+        return "Active"
+      case "maintenance":
+        return "Maintenance"
+      case "inactive":
+        return "Inactive"
+      default:
+        return "Unknown"
     }
   }
 
   return (
-    <div className="flex flex-col gap-2 min-h-screen w-full">
-      <header className="p-6 pt-6">
-        <h1 className="text-4xl text-center font-bold text-white">PondIQ</h1>
+    <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <header className="p-6 pt-12">
+        <h1 className="text-3xl font-bold text-white">Pond Overview</h1>
+        <p className="text-white/80 mt-1">Monitor all your aquaculture ponds</p>
       </header>
 
-      <main className="flex-1 px-4 pb-20 space-y-4 md:mx-auto">
-        <Card className="flex bg-white border-0 shadow-lg w-full md:w-3xl">
-          <CardContent className="p-4 w-full">
-            <h2 className="text-xl font-bold text-teal-900 mb-4">Dashboard</h2>
+      {/* Main Content */}
+      <main className="flex-1 px-4 pb-20 md:pb-6 space-y-6 md:px-6">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-teal-800 dark:text-teal-400">
+                  {mockPonds.filter((p) => p.status === "active").length}
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Active Ponds</div>
+              </div>
+            </CardContent>
+          </Card>
 
-            <div className="space-y-4">
-              <SensorRow icon={<Thermometer />} label="Water Temp" value={`${data.temperature}°C`} />
-              <SensorRow icon={<Thermometer />} label="Air Temp" value={`${data.atm_temperature}°C`} />
-              <SensorRow icon={<Fan />} label="Humidity" value={`${data.humidity}%`} />
-              <SensorRow icon={<Droplet />} label="Turbidity" value={`${data.turbidity_percent} NTU`} />
-              <SensorRow icon={<Fan />} label="Air Quality" value={getAirQualityStatus(data.air_quality_raw)} />
-              <SensorRow icon={<Droplet />} label="pH" value={data.pH.toFixed(1)} />
-            </div>
-          </CardContent>
-        </Card>
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-teal-800 dark:text-teal-400">
+                  {mockPonds.reduce((sum, pond) => sum + pond.data.fishCount, 0)}
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Total Fish</div>
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-white border-0 shadow-lg">
-          <CardContent className="p-4">
-            <div className="flex align-middle items-center mb-4 gap-3">
-              <Waves className="w-7 h-7 text-teal-800" />
-              <h2 className="text-2xl font-bold text-teal-900">Water Management</h2>
-            </div>
-            <div className="flex items-center justify-between py-3 mb-4">
-              <span className="text-teal-900 font-medium">Water Level</span>
-              <span className="text-teal-900 font-bold">{formattedWaterLevel}%</span>
-            </div>
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                  {mockPonds.reduce((sum, pond) => sum + pond.data.alerts, 0)}
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Alerts</div>
+              </div>
+            </CardContent>
+          </Card>
 
-            <button
-              onClick={handleWaterChange}
-              disabled={isChanging}
-              className={`w-full py-3 rounded-md font-medium text-white ${isChanging ? "bg-gray-500 cursor-not-allowed" : "bg-teal-800 hover:bg-teal-700"
-                }`}
-            > 
-              {isChanging ? "Changing..." : "Start Water Change"}
-            </button>
-          </CardContent>
-          <WaterChangeStatus />
-        </Card>
-      </main>
-    </div>
-  )
-}
-
-// A helper subcomponent for consistency
-function SensorRow({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode
-  label: string
-  value: string | number
-}) {
-  return (
-    <div className="flex items-center justify-between py-3 border-b border-gray-100">
-      <div className="flex items-center">
-        <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center mr-3">
-          {icon}
+          <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
+            <CardContent className="p-4">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-teal-800 dark:text-teal-400">
+                  {Math.round(mockPonds.reduce((sum, pond) => sum + pond.data.waterLevel, 0) / mockPonds.length)}%
+                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Avg Water Level</div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <span className="text-teal-900 font-medium">{label}</span>
-      </div>
-      <span className="text-teal-900 font-bold">{value}</span>
+
+        {/* Pond Cards */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-white">Your Ponds</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              asChild
+            >
+              <Link href="/settings">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Pond
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {mockPonds.map((pond) => (
+              <Card
+                key={pond.id}
+                className="bg-white dark:bg-gray-800 border-0 shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg font-medium">{pond.name}</CardTitle>
+                    <div className="flex items-center space-x-2">
+                      {pond.data.alerts > 0 && <AlertTriangle className="w-4 h-4 text-orange-500" />}
+                      <div className={`w-3 h-3 rounded-full ${getStatusColor(pond.status)}`} />
+                    </div>
+                  </div>
+                  <CardDescription>{getStatusText(pond.status)}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="flex items-center">
+                      <Thermometer className="w-4 h-4 text-teal-600 dark:text-teal-400 mr-2" />
+                      <span className="text-gray-600 dark:text-gray-400">{pond.data.temperature}°C</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Droplet className="w-4 h-4 text-teal-600 dark:text-teal-400 mr-2" />
+                      <span className="text-gray-600 dark:text-gray-400">pH {pond.data.ph}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Fan className="w-4 h-4 text-teal-600 dark:text-teal-400 mr-2" />
+                      <span className="text-gray-600 dark:text-gray-400">{pond.data.airQuality}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-teal-600 dark:bg-teal-400 rounded mr-2" />
+                      <span className="text-gray-600 dark:text-gray-400">{pond.data.waterLevel}%</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500 dark:text-gray-400">Fish Count:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{pond.data.fishCount}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm mt-1">
+                      <span className="text-gray-500 dark:text-gray-400">Last Fed:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{pond.data.lastFed}</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    className="w-full bg-teal-800 hover:bg-teal-700 text-white dark:bg-teal-700 dark:hover:bg-teal-600"
+                    asChild
+                  >
+                    <Link href={`/${pond.id}/water-management`}>Manage Pond</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   )
 }
