@@ -15,14 +15,14 @@ const formatTimeTo12Hour = (time24h: string) => {
     // Parse the time string (expected format: "HH:MM")
     const [hourStr, minute] = time24h.split(":");
     let hour = parseInt(hourStr, 10);
-    
+
     // Determine AM/PM
     const period = hour >= 12 ? "PM" : "AM";
-    
+
     // Convert hour to 12-hour format
     hour = hour % 12;
     hour = hour === 0 ? 12 : hour; // Handle midnight (0:00) as 12 AM
-    
+
     // Format the time string
     return `${hour}:${minute} ${period}`;
   } catch (error) {
@@ -36,11 +36,13 @@ export default function Feeding() {
   const [manualMode, setManualMode] = useState(false)
   const [newTime, setNewTime] = useState("")
   const [loading, setLoading] = useState(true)
-
+  const [feedKg, setFeedKg] = useState("1.0")
+  const [feederDiameter, setFeederDiameter] = useState("30")
+  
   // Load schedule and mode from Firebase
   useEffect(() => {
     setLoading(true)
-    
+
     // Reference to the feeding schedule in Firebase
     const scheduleRef = ref(db, "feeding_schedule")
     const modeRef = ref(db, "feeding_mode")
@@ -111,7 +113,7 @@ export default function Feeding() {
       toast.error("⚠️ Failed to update schedule")
     }
   }
-  
+
   const updateMode = async (val: boolean) => {
     try {
       setManualMode(val)
@@ -209,6 +211,45 @@ export default function Feeding() {
             )}
           </CardContent>
         </Card>
+
+        {/* feeding config */}
+        <Card className="bg-white border-0 shadow-lg">
+          <CardContent className="p-4 space-y-4">
+            <h2 className="text-xl font-bold text-teal-900 border-b pb-2">Feeding Configuration</h2>
+
+            <div className="flex flex-col gap-2">
+              <Label className="text-teal-900 font-medium">Feed Quantity (kg)</Label>
+              <input
+                type="number"
+                step="0.1"
+                min="0.1"
+                value={feedKg}
+                onChange={(e) => {
+                  setFeedKg(e.target.value)
+                  set(ref(db, "feed_kg"), parseFloat(e.target.value))
+                }}
+                className="border rounded p-2"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label className="text-teal-900 font-medium">Feeder Diameter (mm)</Label>
+              <select
+                value={feederDiameter}
+                onChange={(e) => {
+                  setFeederDiameter(e.target.value)
+                  set(ref(db, "feeder_diameter"), parseInt(e.target.value))
+                }}
+                className="border rounded p-2"
+              >
+                <option value="20">20 mm</option>
+                <option value="30">30 mm</option>
+                <option value="40">40 mm</option>
+              </select>
+            </div>
+          </CardContent>
+        </Card>
+
       </main>
     </div>
   )
