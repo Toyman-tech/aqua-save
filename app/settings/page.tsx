@@ -16,8 +16,16 @@ export default function Settings() {
       <main className="flex-1 px-4 pb-20 space-y-4 md:max-w-3xl md:mx-auto w-full">
         <Card className="bg-white border-0 shadow-lg">
           <CardContent className="p-0">
+          
             <div className="divide-y divide-gray-100">
-              <button className="flex items-center justify-between w-full p-4 text-left">
+            <button
+                className="flex items-center justify-between w-full p-4 text-left"
+                onClick={() => router.push("/report")}
+              >
+                <span className="text-teal-900 font-medium">Log Report</span>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </button>
+              <button disabled className="flex items-center justify-between w-full p-4 text-left">
                 <span className="text-teal-900 font-medium">User</span>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </button>
@@ -36,13 +44,7 @@ export default function Settings() {
                 <span className="text-teal-900 font-medium">Privacy & Security</span>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </button>
-              <button
-                className="flex items-center justify-between w-full p-4 text-left"
-                onClick={() => router.push("/report")}
-              >
-                <span className="text-teal-900 font-medium">Log Report</span>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </button>
+              
             </div>
           </CardContent>
         </Card>
