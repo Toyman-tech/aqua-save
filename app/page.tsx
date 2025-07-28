@@ -14,7 +14,7 @@ const mockPonds = [
       ph: 7.4,
       airQuality: "Normal",
       waterLevel: 80,
-      fishCount: 150,
+      lastWaterChanged: "1 hour ago",
       lastFed: "2 hours ago",
       alerts: 0,
     },
@@ -28,7 +28,7 @@ const mockPonds = [
       ph: 7.2,
       airQuality: "Good",
       waterLevel: 75,
-      fishCount: 120,
+      lastWaterChanged: "3 hours ago",
       lastFed: "1 hour ago",
       alerts: 0,
     },
@@ -42,7 +42,7 @@ const mockPonds = [
       ph: 6.8,
       airQuality: "Normal",
       waterLevel: 60,
-      fishCount: 80,
+      lastWaterChanged: "2 hours ago",
       lastFed: "4 hours ago",
       alerts: 1,
     },
@@ -87,7 +87,7 @@ export default function Dashboard() {
       {/* Main Content */}
       <main className="flex-1 px-4 pb-20 md:pb-6 space-y-6 md:px-6">
         {/* Summary Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-4">
           <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
             <CardContent className="p-4">
               <div className="text-center">
@@ -99,7 +99,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
+          {/* <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
             <CardContent className="p-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-teal-800 dark:text-teal-400">
@@ -108,7 +108,7 @@ export default function Dashboard() {
                 <div className="text-sm text-gray-500 dark:text-gray-400">Total Fish</div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           <Card className="bg-white dark:bg-gray-800 border-0 shadow-lg">
             <CardContent className="p-4">
@@ -137,17 +137,6 @@ export default function Dashboard() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-white">Your Ponds</h2>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-              asChild
-            >
-              <Link href="/settings">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Pond
-              </Link>
-            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -188,8 +177,8 @@ export default function Dashboard() {
 
                   <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-500 dark:text-gray-400">Fish Count:</span>
-                      <span className="font-medium text-gray-900 dark:text-white">{pond.data.fishCount}</span>
+                      <span className="text-gray-500 dark:text-gray-400">Last Water change:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{pond.data.lastWaterChanged}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm mt-1">
                       <span className="text-gray-500 dark:text-gray-400">Last Fed:</span>
@@ -201,7 +190,7 @@ export default function Dashboard() {
                     className="w-full bg-teal-800 hover:bg-teal-700 text-white dark:bg-teal-700 dark:hover:bg-teal-600"
                     asChild
                   >
-                    <Link href={`/${pond.id}/water-management`}>Manage Pond</Link>
+                    <Link href={`/${pond.id}/water-management/`}>Manage Pond</Link>
                   </Button>
                 </CardContent>
               </Card>

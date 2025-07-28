@@ -19,23 +19,23 @@ export function PondHeader({ title, description }: PondHeaderProps) {
           <PondSwitcher />
         </div>
         <h1 className="text-3xl font-bold text-white">{title}</h1>
-        {description && <p className="text-white/80 mt-1">{description}</p>}
+        {description && <p className="text-white mt-1">{description}</p>}
       </header>
 
       {/* Desktop Header */}
       <header className="hidden md:block p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{title}</h1>
-            {description && <p className="text-gray-500 dark:text-gray-400 mt-1">{description}</p>}
+            <h1 className="text-3xl font-bold text-white dark:text-white">{title}</h1>
+            {description && <p className="text-white dark:text-white mt-1">{description}</p>}
           </div>
           <div className="w-64">
             <PondSwitcher />
           </div>
         </div>
         {selectedPond && (
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            Currently viewing: <span className="font-medium text-gray-900 dark:text-white">{selectedPond.name}</span>
+          <div className="text-sm text-white dark:text-gray-400">
+            Currently viewing: <span className="font-medium text-white dark:text-white">{selectedPond.name}</span>
           </div>
         )}
       </header>
