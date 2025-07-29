@@ -37,7 +37,7 @@ const formatTimeTo12Hour = (time24h: string) => {
 }
 
 export default function Feeding({ params }: { params: Promise<{ pondId: string }> }) {
-  const {pondId} = use(params)
+  const { pondId } = use(params)
   const [feedingTimes, setFeedingTimes] = useState<string[]>([])
   const [manualMode, setManualMode] = useState(false)
   const [newTime, setNewTime] = useState("")
@@ -45,6 +45,8 @@ export default function Feeding({ params }: { params: Promise<{ pondId: string }
   const [feederDiameter, setFeederDiameter] = useState("30")
   const [logs, setLogs] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [lastCheckMinute, setLastCheckMinute] = useState(-1)
+
   const scheduleRef = ref(db, `${pondId}/feeding_schedule`)
   const modeRef = ref(db, `${pondId}/feeding_mode`)
   const configKgRef = ref(db, `${pondId}/feed_kg`)
@@ -94,6 +96,23 @@ export default function Feeding({ params }: { params: Promise<{ pondId: string }
       unsub3()
     }
   }, [pondId])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date()
+      const hour = now.getHours().toString().padStart(2, "0")
+      const minute = now.getMinutes().toString().padStart(2, "0")
+      const timeNow = `${hour}:${minute}`
+
+      if (now.getMinutes() !== lastCheckMinute && feedingTimes.includes(timeNow)) {
+        logFeeding("auto")
+        toast.success(`🐟 Auto feeding initiated for ${pondId}`)
+        setLastCheckMinute(now.getMinutes())
+      }
+    }, 10000)
+
+    return () => clearInterval(interval)
+  }, [feedingTimes, pondId, lastCheckMinute])
 
   const updateSchedule = async (times: string[]) => {
     try {
@@ -150,8 +169,9 @@ export default function Feeding({ params }: { params: Promise<{ pondId: string }
   const triggerManualFeed = async () => {
     await set(ref(db, `${pondId}/manual_feed`), true)
     await logFeeding("manual")
-    toast.success("Manual feed triggered")
+    toast.success(`Manual feed triggered for ${pondId}`)
   }
+
 
   return (
     <div className="flex flex-col min-h-screen">
