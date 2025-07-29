@@ -11,8 +11,8 @@ import { Toaster } from "react-hot-toast"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Pond-TQ",
-  description: "Multi-pond aquaculture management system",
+  title: "Pond-IQ",
+  description: "PondIQ is a comprehensive smart aquaculture solution designed to bring efficiency, precision, and intelligence to catfish farming operations, directly empowering farmers through a user-friendly mobile application. Our current prototype delivers robust automation capabilities, while also laying the critical groundwork for advanced AI-driven disease detection.",
 }
 
 export default function RootLayout({
